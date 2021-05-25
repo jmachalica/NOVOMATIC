@@ -1,12 +1,11 @@
-#ifndef NOVOMATIC_EXCEPTION_H
-#define NOVOMATIC_EXCEPTION_H
+#pragma once
 
 #include <exception>
+
 struct Exception : public std::exception {
 
-    explicit Exception(const char *message = "") {
+    explicit Exception(std::string message = "") {
         this->message.append(message);
-
     }
 
     const char *what() const noexcept override {
@@ -19,4 +18,11 @@ struct Exception : public std::exception {
 };
 
 
-#endif //NOVOMATIC_EXCEPTION_H
+struct VectorZero : Exception {
+    VectorZero(std::string message = "") : Exception("Vector length is 0." + message) {}
+
+};
+
+
+
+

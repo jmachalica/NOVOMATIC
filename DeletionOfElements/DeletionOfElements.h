@@ -1,13 +1,20 @@
-#ifndef NOVOMATIC_DELETIONOFELEMENTS_H
+#pragma once
 
 #include <vector>
 
 template<typename T>
-void deleteItem(std::vector<T> &vec, size_t index) {
-
+void deleteItem(std::vector<T> &vec, int index) {
     size_t size = vec.size();
 
-    if (!size || index > size - 1 || index < 0) return; // size and index validation
+    // size and index validation
+    if (!size) {
+        throw std::length_error("Vector is empty.");
+    }
+
+    if (index > size - 1 || index < 0) {
+        throw std::out_of_range("Index "+std::to_string(index)+  " is out of range.");
+    }
+
 
     if (index != size - 1) // if not last element
     {
@@ -18,13 +25,12 @@ void deleteItem(std::vector<T> &vec, size_t index) {
 
 }
 
+
 template<typename T>
 void printVec(std::vector<T> &vec) {
-    size_t size = vec.size();
-    for (int i{0}; i < size; i++) {
 
-        std::cout << vec[i] << " ";
-
+    for (T &element:vec) {
+        std::cout << element << " ";
     }
 
     std::cout << std::endl;
@@ -32,6 +38,4 @@ void printVec(std::vector<T> &vec) {
 }
 
 
-#define NOVOMATIC_DELETIONOFELEMENTS_H
 
-#endif //NOVOMATIC_DELETIONOFELEMENTS_H

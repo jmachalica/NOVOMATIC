@@ -1,16 +1,13 @@
+#pragma once
 
-#ifndef NOVOMATIC_VEC3_H
-#define NOVOMATIC_VEC3_H
 #include <cmath>
 #include "Exception.h"
 
+//support math functions could be in separate file, but I didn't want this project to become too large, since they are used only here
+
 //check if floating point value is zero with some epsilon limit
-bool isZero(float num, float eps=0.00001)
-{
-
-    if(  fabs( num-0)<=eps  )return true;
-    return false;
-
+bool isZero(float num, float eps = 0.000001) {
+    return fabs(num - 0) <= eps;
 }
 
 struct vec3 {
@@ -45,12 +42,12 @@ struct vec3 {
 
     }
 
-    //vector scaling
+    //vector division by a scalar
     vec3 operator/(float s) const {
 
         if (!isZero(s)) { return vec3(x / s, y / s, z / s); }
 
-        throw Exception("Vector division: Division by zero");
+        throw std::overflow_error("Division by zero");
     }
 
     friend std::ostream &operator<<(std::ostream &os, const vec3 &vec) {
@@ -64,19 +61,26 @@ struct vec3 {
 
     }
 
-    // normalize vector -> length ==1
+    // normalize vector -> length == 1
     vec3 normalize() const {
 
         float l = vectorLength();
         try {
             return *this / l;
         }
-        catch (Exception &) {
+        catch (std::overflow_error &) {
 
-            throw Exception("Vector length is 0, vector can't be normalized");
+            throw VectorZero("Vector can't be normalized");
 
         }
+    }
 
+    vec3 vec_abs() const {
+        return vec3(abs(x), abs(y), abs(z));
+    }
+
+    bool isZeroVector() const {
+        return x == 0 && y == 0 && z == 0;
 
     }
 
@@ -89,7 +93,6 @@ vec3 center(vec3 v1, vec3 v2) {
 };
 
 
-
 // sign/signum function
 int sign(float n) {
     return (n > 0) - (n < 0);
@@ -97,4 +100,3 @@ int sign(float n) {
 
 
 
-#endif //NOVOMATIC_VEC3_H
